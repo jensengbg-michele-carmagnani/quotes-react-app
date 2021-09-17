@@ -4,6 +4,7 @@ import AllQuotes from "./Page/AllQuotes";
 import DetailQuote from "./Page/DetilQuote";
 import NewQuote from "./Page/NewQuote";
 import Layout from "./components/layout/Layout";
+import NotFouond from "./Page/NotFouond";
 
 function App() {
   return (
@@ -15,11 +16,14 @@ function App() {
         <Route path="/allquotes" exact>
           <AllQuotes />
         </Route>
-        <Route path="/allquotes/:quoteId">
+        <Route path="/quote/:quoteId">
           <DetailQuote />
         </Route>
         <Route path="/newquote">
           <NewQuote />
+        </Route>
+        <Route path="*">
+          <NotFouond />
         </Route>
       </Switch>
     </Layout>
