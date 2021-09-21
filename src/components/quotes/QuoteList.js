@@ -19,17 +19,25 @@ const QuoteList = (props) => {
 
   const queryParams = new URLSearchParams(location.search);
 
-  const isSortingAscending = queryParams.get("sort") === 'asc';
+  const isSortingAscending = queryParams.get("sort") === "asc";
 
   const sortedQuotes = sortQuotes(props.quotes, isSortingAscending);
 
   const changeSortHandler = () => {
-    history.push("/allquotes?sort=" + (isSortingAscending ? "desc" : "asc"));
+    // history.push(
+    //   `${location.pathname}?sort=${isSortingAscending ? "desc" : "asc"}`
+    // );
+    history.push({
+      pathname: location.pathname,
+      search: `?sort=${(isSortingAscending ? "desc" : "asc")}`,
+    });
   };
   return (
     <Fragment>
       <div className={classes.sorting}>
-        <button onClick={changeSortHandler}>Sort { isSortingAscending ? 'Descending' : 'Ascending'}</button>
+        <button onClick={changeSortHandler}>
+          Sort {isSortingAscending ? "Descending" : "Ascending"}
+        </button>
       </div>
       <ul className={classes.list}>
         {sortedQuotes.map((quote) => (
