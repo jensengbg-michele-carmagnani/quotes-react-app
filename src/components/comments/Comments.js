@@ -1,29 +1,32 @@
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useParams } from "react-router-dom";
+
 import classes from "./Comments.module.css";
 import NewCommentForm from "./NewCommentForm";
 import useHttp from "../../hooks/use-http";
 import { getAllComments } from "../../lib/api";
 import LoadingSpinner from "../UI/LoadingSpinner";
-import CommentList from "../comments/CommentsList";
+import CommentsList from "./CommentsList";
+
 const Comments = () => {
   const [isAddingComment, setIsAddingComment] = useState(false);
-  const parmas = useParams();
-  console.log("parmas", parmas);
-  const { quoteId } = parmas;
+  const params = useParams();
 
-  const { sendRequest, status, data: loadedComments } = useHttp();
+  const { quoteId } = params;
+
+  const { sendRequest, status, data: loadedComments } = useHttp(getAllComments);
 
   useEffect(() => {
     sendRequest(quoteId);
   }, [quoteId, sendRequest]);
+
   const startAddCommentHandler = () => {
     setIsAddingComment(true);
   };
 
-  const addCommentHandler = useCallback(() => {
+  const addedCommentHandler = useCallback(() => {
     sendRequest(quoteId);
-  }, [sendRequest,quoteId]);
+  }, [sendRequest, quoteId]);
 
   let comments;
 
@@ -36,14 +39,14 @@ const Comments = () => {
   }
 
   if (status === "completed" && loadedComments && loadedComments.length > 0) {
-    comments = <CommentList comments={loadedComments} />;
+    comments = <CommentsList comments={loadedComments} />;
   }
 
   if (
     status === "completed" &&
     (!loadedComments || loadedComments.length === 0)
   ) {
-    comments = <p className="centered">No comments added yet!!</p>;
+    comments = <p className="centered">No comments were added yet!</p>;
   }
 
   return (
@@ -55,9 +58,12 @@ const Comments = () => {
         </button>
       )}
       {isAddingComment && (
-        <NewCommentForm quoteId={quoteId} onAddedComment={addCommentHandler} />
+        <NewCommentForm
+          quoteId={quoteId}
+          onAddedComment={addedCommentHandler}
+        />
       )}
-      <p>Comments...</p>
+      {comments}
     </section>
   );
 };
